@@ -1,5 +1,5 @@
 import scrapy
-
+import re
 
 class QuotesSpider(scrapy.Spider):
     name = "quotes"
@@ -35,19 +35,34 @@ class QuotesSpider(scrapy.Spider):
         rooms = int(rooms)
         self.log(rooms)
 
-        # bathrooms = 
+        bathrooms = response.css('li.js-detail-bathrooms span.dc::text').extract_first()
+        bathrooms = int(bathrooms)
+        self.log(rooms)
+        
+        area = response.css('span.js-detail-area-value::text').extract_first()
+        area = int(area)
+        self.log(area)
 
-        # area = 
+        garage = response.css('li.js-detail-parking-spaces span.dc::text').extract_first()
+        garage = int(garage)
+        self.log(garage)
 
-        # garage = 
+        description = response.css('p.qm::text').extract()
+        self.log(' '.join(description))
 
-        # description = 
+        street = response.css('a.js-title-location::text').extract_first()
+        comma_rule = r'[\w\s]+,'
+        self.log(re.match(comma_rule, street).group(0)[:-1])
+        
 
-        # street = 
+        street_number = response.css('a.js-title-location::text').extract_first()
+        reverse_comma_rule = r',\s\d+'
+        self.log(re.findall(reverse_comma_rule, street)[0][2:])
+        
 
-        # street_number =
-
-        # neighborhood =
+        neighborhood = response.css('a.js-title-location::text').extract_first()
+        self.log(re.findall(comma_rule, street)[1][1:-1])
+        
 
 
 
